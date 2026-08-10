@@ -1,7 +1,5 @@
 # Project 1: Host a Static Website on AWS
 
-## Difficulty
-
 * **Level:** 🟢 **Beginner**
 
 ## Tools Required
