@@ -1,0 +1,10 @@
+
+.env
+*.pem
+*.key
+.aws/
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+.DS_Store
+Thumbs.db
