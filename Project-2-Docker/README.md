@@ -527,7 +527,13 @@ Create a `screenshots/` directory if you want to commit screenshots, then captur
 6. Docker Hub repository showing the published tag.
 7. GitHub repository with the source files.
 
-Do not include private keys, tokens, account IDs, or other sensitive information in screenshots.
+Do not include private keys, tokens, account IDs, or other sensitive information in screenshots.  
+
+<img width="949" height="78" alt="Screenshot 2026-10-22 154642" src="https://github.com/user-attachments/assets/decc527c-5d7c-4c11-a23f-33c546c13b00" />
+
+<img width="959" height="231" alt="Screenshot 2026-10-22 154711" src="https://github.com/user-attachments/assets/a09a1314-6521-4ebc-bbf4-26945ef5fbaf" />
+
+<img width="959" height="539" alt="Screenshot 2026-10-22 154913" src="https://github.com/user-attachments/assets/6b4c8d71-2e6a-45a6-9958-2dd8ec03b8fa" />
 
 ## 12. Interview questions
 
