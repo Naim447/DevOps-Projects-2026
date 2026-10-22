@@ -1,0 +1,12 @@
+{
+  "name": "project-2-docker-nodejs",
+  "version": "1.0.0",
+  "description": "Beginner Node.js Express application containerized with Docker on AWS EC2",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
