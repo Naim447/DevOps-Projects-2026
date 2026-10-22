@@ -574,17 +574,6 @@ sudo docker image ls
 
 Terminating an instance does not necessarily remove every associated resource. Verify the AWS console before assuming all costs have stopped.
 
-## 15. Official documentation
-
-- Docker Engine on Ubuntu: https://docs.docker.com/engine/install/ubuntu/
-- Docker getting started: https://docs.docker.com/get-started/
-- Docker build: https://docs.docker.com/build/
-- Docker CLI reference: https://docs.docker.com/reference/cli/docker/
-- Docker Hub: https://hub.docker.com/
-- Node.js: https://nodejs.org/en
-- Express: https://expressjs.com/
-- AWS EC2 getting started: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html
-- AWS security groups: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-security-groups.html
 
 ---
 
