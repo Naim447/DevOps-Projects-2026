@@ -145,27 +145,18 @@ script.js
 http://YOUR_PUBLIC_IP
 ```
 
-### 9. Install Git
+### 9. Out Put Screen 
 
-23. Install Git:
+<img width="952" height="539" alt="Screenshot 2026-10-22 135413" src="https://github.com/user-attachments/assets/672fcda6-0a5b-44c6-b15c-6a81cd3e8e7a" />
 
-```bash
-sudo apt install git -y
-```
+<img width="959" height="539" alt="Screenshot 2026-10-22 135448" src="https://github.com/user-attachments/assets/80fbb643-1a7a-4e5d-aac3-eda544ed3179" />
 
-24. Verify:
-
-```bash
-git --version
-```
-
-25. Optional: Clone your GitHub website repository onto EC2.
 
 ### 10. Optional: Domain & HTTPS
 
-26. Connect a domain using DNS/Route 53.
-27. Configure Nginx for the domain.
-28. Add HTTPS/SSL.
+23. Connect a domain using DNS/Route 53.
+24. Configure Nginx for the domain.
+25. Add HTTPS/SSL.
 
 ---
 
