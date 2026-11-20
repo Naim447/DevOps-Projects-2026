@@ -1,0 +1,29 @@
+# SSH keys — NEVER commit these
+*.pem
+*.key
+*.ppk
+id_rsa*
+id_ed25519*
+
+# Ansible Vault passwords and unencrypted vault files
+vault-password.txt
+.vault-password
+inventory/group_vars/webservers/vault.yml
+!inventory/group_vars/webservers/vault.yml.example
+
+# Ansible runtime files
+*.retry
+*.log
+.ansible/
+__pycache__/
+
+# Local overrides — keep your real IP out of git
+inventory/hosts.local.ini
+inventory/hosts.local.yml
+.env
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

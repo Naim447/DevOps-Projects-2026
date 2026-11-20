@@ -1,0 +1,7 @@
+---
+# Run locally with: ansible-lint
+# CI runs the same check (see .github/workflows/ansible-lint.yml).
+profile: production
+skip_list:
+  # We use fully-qualified module names everywhere except where noted.
+  - name[prefix]
