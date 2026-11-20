@@ -1,0 +1,113 @@
+pipeline {
+    agent any
+
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    environment {
+        IMAGE_NAME = 'YOUR_DOCKERHUB_USERNAME/jenkins-node-app'
+        CONTAINER_NAME = 'jenkins-node-app'
+        APP_PORT = '3000'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh 'npm install'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'npm test'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    docker build \
+                      --label "org.opencontainers.image.revision=$GIT_COMMIT" \
+                      -t "$IMAGE_NAME:$BUILD_NUMBER" \
+                      -t "$IMAGE_NAME:latest" .
+                '''
+            }
+        }
+
+        stage('Push to Docker Hub') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKERHUB_USER',
+                    passwordVariable: 'DOCKERHUB_TOKEN'
+                )]) {
+                    sh '''
+                        set +x
+                        echo "$DOCKERHUB_TOKEN" | docker login \
+                          --username "$DOCKERHUB_USER" \
+                          --password-stdin
+                        docker push "$IMAGE_NAME:$BUILD_NUMBER"
+                        docker push "$IMAGE_NAME:latest"
+                        docker logout
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker rm -f "$CONTAINER_NAME" 2>/dev/null || true
+
+                    docker run -d \
+                      --name "$CONTAINER_NAME" \
+                      --restart unless-stopped \
+                      -p "$APP_PORT:3000" \
+                      -e APP_VERSION="$BUILD_NUMBER" \
+                      "$IMAGE_NAME:$BUILD_NUMBER"
+                '''
+            }
+        }
+
+        stage('Verify Deployment') {
+            steps {
+                sh '''
+                    for attempt in $(seq 1 15); do
+                      if curl --fail --silent \
+                        http://127.0.0.1:$APP_PORT/health; then
+                        echo
+                        echo "Health check passed"
+                        exit 0
+                      fi
+                      sleep 2
+                    done
+
+                    echo "Health check failed"
+                    docker logs "$CONTAINER_NAME" || true
+                    exit 1
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            sh 'docker image prune -f || true'
+        }
+        success {
+            echo 'CI/CD pipeline completed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed. Review the stage logs before retrying.'
+        }
+    }
+}

@@ -1,0 +1,1 @@
+{"dependencies":{"express":"^4.21.2"},"description":"Node.js app with structured JSON logging for an ELK Stack learning project","main":"src/server.js","name":"project-9-elk-stack","scripts":{"start":"node src/server.js","test":"node --test"},"version":"1.0.0"}

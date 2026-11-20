@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: project-5
+  labels:
+    app: k8s-node-app
+    project: project-5-kubernetes

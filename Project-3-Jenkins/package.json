@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "express": "^4.21.2"
+  },
+  "description": "Node.js app for a Jenkins CI/CD learning project",
+  "main": "src/server.js",
+  "name": "project-3-jenkins-cicd",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "version": "1.0.0"
+}

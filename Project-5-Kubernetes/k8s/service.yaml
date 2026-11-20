@@ -1,0 +1,38 @@
+---
+# ClusterIP: stable internal address for other Pods / Services.
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-node-app
+  namespace: project-5
+  labels:
+    app: k8s-node-app
+spec:
+  type: ClusterIP
+  selector:
+    app: k8s-node-app
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+      name: http
+---
+# NodePort: reach the app from outside the cluster (Minikube / lab).
+# Access it with: minikube service k8s-node-app-nodeport -n project-5 --url
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-node-app-nodeport
+  namespace: project-5
+  labels:
+    app: k8s-node-app
+spec:
+  type: NodePort
+  selector:
+    app: k8s-node-app
+  ports:
+    - port: 80
+      targetPort: 3000
+      nodePort: 30080
+      protocol: TCP
+      name: http

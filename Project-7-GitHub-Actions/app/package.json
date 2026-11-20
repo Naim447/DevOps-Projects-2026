@@ -1,0 +1,1 @@
+{"dependencies":{"express":"^4.21.2"},"description":"Node.js app for a GitHub Actions CI/CD learning project","main":"src/server.js","name":"project-7-github-actions-cicd","scripts":{"start":"node src/server.js","test":"node --test"},"version":"1.0.0"}

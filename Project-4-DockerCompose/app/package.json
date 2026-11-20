@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongodb": "^6.10.0",
+    "redis": "^4.7.0"
+  },
+  "description": "Node.js + MongoDB + Redis app for a Docker Compose learning project",
+  "main": "src/server.js",
+  "name": "project-4-docker-compose",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test"
+  },
+  "version": "1.0.0"
+}

@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: k8s-node-app
+  namespace: project-5
+  labels:
+    app: k8s-node-app
+  annotations:
+    # Minikube NGINX Ingress controller. Enable it first:
+    #   minikube addons enable ingress
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: k8s-app.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: k8s-node-app
+                port:
+                  number: 80

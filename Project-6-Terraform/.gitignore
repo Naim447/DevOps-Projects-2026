@@ -1,0 +1,19 @@
+# Terraform state — NEVER commit this (it can contain secrets)
+*.tfstate
+*.tfstate.*
+*.tfplan
+terraform.tfvars
+!terraform.tfvars.example
+
+# Terraform working directories
+.terraform/
+.terraform.lock.hcl
+
+# Crash logs
+crash.log
+crash.*.log
+
+# OS / editor
+.DS_Store
+*.pem
+*.key

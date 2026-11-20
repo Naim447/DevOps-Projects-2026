@@ -1,0 +1,25 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - alerts.yml
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+        # No Alertmanager in this learning setup — alerts appear in the
+        # Prometheus UI (Status -> Rules, and Alerts). Add Alertmanager
+        # later to send them to Slack / email.
+
+scrape_configs:
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "node-app"
+    static_configs:
+      - targets: ["app:3000"]
+    metrics_path: /metrics
+    scrape_interval: 5s

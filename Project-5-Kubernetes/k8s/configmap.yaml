@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: k8s-node-app-config
+  namespace: project-5
+  labels:
+    app: k8s-node-app
+data:
+  NODE_ENV: "production"
+  APP_VERSION: "v1"
+  APP_MESSAGE: "Hello from Kubernetes!"
+  PORT: "3000"

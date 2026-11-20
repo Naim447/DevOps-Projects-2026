@@ -1,0 +1,102 @@
+name: CI/CD Pipeline
+
+# Runs on every push to main and on every pull request.
+# The deploy job runs only on pushes to main (not on PRs).
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+# Least privilege: the workflow only needs to read the repo and
+# write packages if you ever push to GHCR (it does not here).
+permissions:
+  contents: read
+
+env:
+  IMAGE_NAME: YOUR_DOCKERHUB_USERNAME/github-actions-node-app
+  APP_PORT: "3000"
+
+jobs:
+  # --- CI: build + test + Docker image (runs on every push / PR) ---
+  build-and-test:
+    name: Build and Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: app
+          push: false
+          tags: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+  # --- CD: push the image, then deploy it to EC2 (main branch only) ---
+  deploy:
+    name: Push and Deploy
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: app
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.IMAGE_NAME }}:latest
+
+      - name: Deploy to EC2 over SSH
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            docker pull ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            docker rm -f github-actions-node-app 2>/dev/null || true
+            docker run -d \
+              --name github-actions-node-app \
+              --restart unless-stopped \
+              -p ${{ env.APP_PORT }}:3000 \
+              -e APP_VERSION=${{ github.sha }} \
+              ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            for attempt in $(seq 1 15); do
+              if curl --fail --silent http://127.0.0.1:${{ env.APP_PORT }}/health; then
+                echo "Health check passed"
+                exit 0
+              fi
+              sleep 2
+            done
+            echo "Health check failed"
+            docker logs github-actions-node-app || true
+            exit 1
