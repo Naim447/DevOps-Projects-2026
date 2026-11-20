@@ -1,0 +1,32 @@
+---
+# Health check — read-only, changes nothing.
+# Run: ansible-playbook playbooks/health-check.yml
+- name: Verify Apache and the application are healthy
+  hosts: webservers
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: Check Apache service is running
+      ansible.builtin.service_facts:
+
+    - name: Assert Apache is running
+      ansible.builtin.assert:
+        that:
+          - "'apache2.service' in ansible_facts.services"
+          - "ansible_facts.services['apache2.service'].state == 'running'"
+        fail_msg: "Apache is not running"
+        success_msg: "Apache is running"
+
+    - name: Check the website returns HTTP 200
+      ansible.builtin.uri:
+        url: "http://{{ ansible_host }}/"
+        status_code: 200
+        return_content: true
+      register: site_response
+      delegate_to: localhost
+      become: false
+
+    - name: Show the HTTP status
+      ansible.builtin.debug:
+        msg: "OK — http://{{ ansible_host }}/ returned {{ site_response.status }} ({{ site_response.content | length }} bytes)"

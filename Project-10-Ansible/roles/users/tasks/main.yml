@@ -1,0 +1,62 @@
+---
+# Users role — create the users listed in group_vars, idempotently.
+# No passwords are set here: users log in with SSH keys only.
+# Add a real public key in group_vars before you run this for real use.
+- name: Create groups for users
+  ansible.builtin.group:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ users | map(attribute='groups') | flatten | unique | list }}"
+  when: users is defined
+
+- name: Create users
+  ansible.builtin.user:
+    name: "{{ item.name }}"
+    comment: "{{ item.comment | default(item.name) }}"
+    groups: "{{ item.groups | default([]) }}"
+    append: true
+    shell: "{{ item.shell | default('/bin/bash') }}"
+    create_home: true
+    state: present
+  loop: "{{ users }}"
+  when: users is defined
+
+- name: Create .ssh directory for users who have a key
+  ansible.builtin.file:
+    path: "/home/{{ item.name }}/.ssh"
+    state: directory
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: "0700"
+  loop: "{{ users }}"
+  when:
+    - users is defined
+    - item.ssh_key is defined
+    - item.ssh_key | length > 0
+
+- name: Add SSH authorised key for users who have one
+  ansible.builtin.lineinfile:
+    path: "/home/{{ item.name }}/.ssh/authorized_keys"
+    line: "{{ item.ssh_key }}"
+    create: true
+    owner: "{{ item.name }}"
+    group: "{{ item.name }}"
+    mode: "0600"
+  loop: "{{ users }}"
+  when:
+    - users is defined
+    - item.ssh_key is defined
+    - item.ssh_key | length > 0
+
+- name: Allow sudo group to use sudo without a password prompt in labs only
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/devops
+    line: "%sudo ALL=(ALL) NOPASSWD:ALL"
+    create: true
+    owner: root
+    group: root
+    mode: "0440"
+    validate: /usr/sbin/visudo -cf %s
+  when:
+    - users is defined
+    - "'sudo' in (users | map(attribute='groups') | flatten | list)"

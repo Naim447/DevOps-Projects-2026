@@ -1,0 +1,18 @@
+---
+# Variables for EVERY host in the inventory.
+# Keep secrets out of here — use Ansible Vault (see README).
+
+# Timezone used by the common role.
+timezone: Asia/Kolkata
+
+# Packages every server gets (common role).
+common_packages:
+  - curl
+  - git
+  - htop
+  - unzip
+  - ufw
+
+# Who owns the application files (used as defaults in the app role).
+website_user: www-data
+website_group: www-data

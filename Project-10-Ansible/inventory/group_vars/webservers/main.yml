@@ -1,0 +1,40 @@
+---
+# Variables for the webservers group only.
+# Change these to rebrand / retune the server — no task file needs editing.
+
+# --- Website / application ---
+site_title: "DevOps Portfolio — Naim Khan"
+site_heading: "Hello from Ansible"
+site_subheading: "This server was configured automatically with Ansible — Apache, users, firewall and application files, with no manual steps."
+apache_server_name: "_"          # "_" = Apache default virtual host (any host)
+apache_document_root: /var/www/html
+apache_port: 80
+app_owner: www-data
+app_group: www-data
+
+# --- Users to create (users role) ---
+# Add a real SSH public key in ssh_key to log in as that user.
+# Leave ssh_key empty ("") to create the user with no key yet.
+# Passwords are NOT set here — SSH keys only.
+users:
+  - name: devops
+    comment: "DevOps Engineer"
+    groups: ["sudo", "www-data"]
+    shell: /bin/bash
+    ssh_key: ""
+  - name: deploy
+    comment: "Deployment user"
+    groups: ["www-data"]
+    shell: /bin/bash
+    ssh_key: ""
+
+# --- Firewall ---
+enable_firewall: true
+# In production narrow SSH to your IP, e.g. "203.0.113.45/32".
+# 0.0.0.0/0 here matches the Project 1 Security Group (SSH from My IP
+# should be set in AWS as well — UFW is the second layer, not the only one).
+allowed_ssh_cidr: "0.0.0.0/0"
+firewall_allowed_ports:
+  - { port: 22, proto: tcp, comment: "SSH" }
+  - { port: 80, proto: tcp, comment: "HTTP" }
+  - { port: 443, proto: tcp, comment: "HTTPS" }

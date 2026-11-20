@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ site_title }}</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>{{ site_heading }}</h1>
+    <p>{{ site_subheading }}</p>
+  </header>
+
+  <main>
+    <section class="card">
+      <h2>What this page proves</h2>
+      <ul>
+        <li>Ansible installed Apache automatically — no manual apt install</li>
+        <li>Ansible created the users listed in the inventory variables</li>
+        <li>The firewall allows only SSH, HTTP and HTTPS</li>
+        <li>The application files were deployed by Ansible, and Apache was restarted only because a file changed</li>
+        <li>Re-running the playbook changes nothing (idempotency)</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>Server facts (rendered by Ansible)</h2>
+      <table>
+        <tr><th>Hostname</th><td>{{ ansible_facts['hostname'] }}</td></tr>
+        <tr><th>Operating system</th><td>{{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}</td></tr>
+        <tr><th>IP address</th><td>{{ ansible_facts['default_ipv4']['address'] }}</td></tr>
+        <tr><th>Web server</th><td>Apache2 on port {{ apache_port }}</td></tr>
+        <tr><th>Deployed at</th><td>{{ ansible_facts['date_time']['iso8601'] }}</td></tr>
+      </table>
+      <p><button id="demoBtn">Click me — JavaScript works too</button></p>
+      <p id="demoMsg"></p>
+    </section>
+
+    <section class="card">
+      <h2>How it was deployed</h2>
+      <pre>ansible-playbook playbooks/site.yml</pre>
+      <p>Roles: <code>common</code> &rarr; <code>users</code> &rarr; <code>firewall</code> &rarr; <code>apache</code> &rarr; <code>app</code></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Deployed with Ansible &bull; Apache &bull; Project 10 — DevOps-Projects-2026 &bull; Naim Khan</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

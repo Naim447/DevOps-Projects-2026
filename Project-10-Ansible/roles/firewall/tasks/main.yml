@@ -1,0 +1,37 @@
+---
+# Firewall role — UFW, second layer behind the AWS Security Group.
+# Skipped entirely when enable_firewall is false.
+# Built-in modules only — ufw is driven with the command module and
+# changed_when, so a second run reports no change (idempotent).
+- name: Install UFW
+  ansible.builtin.apt:
+    name: ufw
+    state: present
+  when:
+    - enable_firewall | default(true) | bool
+    - ansible_facts['os_family'] == "Debian"
+
+- name: Allow firewall ports (loop over group_vars)
+  ansible.builtin.command: "ufw allow {{ item.port }}/{{ item.proto }}"
+  register: ufw_allow
+  changed_when: "'Rule added' in ufw_allow.stdout"
+  loop: "{{ firewall_allowed_ports }}"
+  when:
+    - enable_firewall | default(true) | bool
+    - ansible_facts['os_family'] == "Debian"
+
+- name: Check UFW status
+  ansible.builtin.command: ufw status
+  register: ufw_status
+  changed_when: false
+  when:
+    - enable_firewall | default(true) | bool
+    - ansible_facts['os_family'] == "Debian"
+
+- name: Enable UFW (deny incoming by default)
+  ansible.builtin.command: ufw --force enable
+  when:
+    - enable_firewall | default(true) | bool
+    - ansible_facts['os_family'] == "Debian"
+    - ufw_status.stdout is defined
+    - "'inactive' in ufw_status.stdout"

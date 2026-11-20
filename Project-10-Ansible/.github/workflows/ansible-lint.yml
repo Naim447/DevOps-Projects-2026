@@ -1,0 +1,28 @@
+name: Ansible Lint
+
+on:
+  push:
+    paths:
+      - "**.yml"
+      - "**.yaml"
+      - "**.j2"
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Ansible and ansible-lint
+        run: pip install ansible ansible-lint
+      - name: Lint
+        run: ansible-lint
+      - name: Syntax check all playbooks
+        run: |
+          for p in playbooks/*.yml; do
+            ansible-playbook "$p" --syntax-check
+          done

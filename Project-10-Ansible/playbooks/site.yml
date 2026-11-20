@@ -1,0 +1,35 @@
+---
+# Main playbook — automate server configuration, end to end.
+# Project tasks: install Apache, create users, configure firewall,
+# deploy application files, restart services (via handlers).
+# Run: ansible-playbook playbooks/site.yml
+# Dry run: ansible-playbook playbooks/site.yml --check --diff
+- name: Automate server configuration with Ansible
+  hosts: webservers
+  become: true
+  gather_facts: true
+
+  roles:
+    - role: common
+      tags: [common, base]
+    - role: users
+      tags: [users]
+    - role: firewall
+      tags: [firewall, security]
+    - role: apache
+      tags: [apache, webserver]
+    - role: app
+      tags: [app, deploy]
+
+  post_tasks:
+    - name: Wait for Apache to answer on port 80
+      ansible.builtin.wait_for:
+        port: 80
+        delay: 2
+        timeout: 30
+      tags: [verify]
+
+    - name: Show the website URL
+      ansible.builtin.debug:
+        msg: "Website should be live at http://{{ ansible_host }} — deployed on {{ ansible_facts['hostname'] }} ({{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }})"
+      tags: [verify]

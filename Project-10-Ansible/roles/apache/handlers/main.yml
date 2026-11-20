@@ -1,0 +1,11 @@
+---
+# Handlers run ONLY when a task notifies them — i.e. only on change.
+- name: Restart Apache
+  ansible.builtin.service:
+    name: apache2
+    state: restarted
+
+- name: Reload Apache
+  ansible.builtin.service:
+    name: apache2
+    state: reloaded

@@ -1,0 +1,32 @@
+---
+# App role — deploy the application files to the Apache document root.
+# The HTML is a Jinja2 template (variables + facts are rendered in).
+# CSS / JS are plain files (copy module — no templating needed).
+- name: Ensure application directory exists
+  ansible.builtin.file:
+    path: "{{ apache_document_root }}"
+    state: directory
+    owner: "{{ app_owner | default('www-data') }}"
+    group: "{{ app_group | default('www-data') }}"
+    mode: "0755"
+
+- name: Deploy index.html from template
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "{{ apache_document_root }}/index.html"
+    owner: "{{ app_owner | default('www-data') }}"
+    group: "{{ app_group | default('www-data') }}"
+    mode: "0644"
+  notify: Restart Apache
+
+- name: Deploy static application files (CSS and JS)
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ apache_document_root }}/{{ item }}"
+    owner: "{{ app_owner | default('www-data') }}"
+    group: "{{ app_group | default('www-data') }}"
+    mode: "0644"
+  loop:
+    - style.css
+    - script.js
+  notify: Restart Apache

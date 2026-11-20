@@ -1,0 +1,9 @@
+---
+# No external collection is needed for this project.
+# Every task uses ansible.builtin modules only, so this file is kept
+# as a placeholder for the day you add a collection (for example,
+# community.general for a database or cloud module).
+#
+# If you add one later, list it here and install it with:
+#   ansible-galaxy collection install -r requirements.yml
+collections: []

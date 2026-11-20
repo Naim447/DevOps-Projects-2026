@@ -1,0 +1,5 @@
+---
+# Role defaults — group_vars/webservers/main.yml overrides these.
+apache_port: 80
+apache_server_name: "_"
+apache_document_root: /var/www/html
