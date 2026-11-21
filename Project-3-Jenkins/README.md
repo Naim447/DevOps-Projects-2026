@@ -293,6 +293,3 @@ If GitHub is private, configure the repository credentials before building.
 
 Stop / terminate the EC2 instance in the AWS Console when you are done, and remove the Docker Hub image if you no longer need it. Jenkins and the app run on the same lab instance — terminating it removes both.
 
----
-
-*Project 3 of DevOps-Projects-2026.*
