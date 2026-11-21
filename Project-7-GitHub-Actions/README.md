@@ -164,5 +164,3 @@ The `/` response shows `APP_VERSION` as the commit SHA that was deployed.
 Stop / terminate the EC2 instance in the AWS Console when you are done, and delete the Docker Hub image if you no longer need it.
 
 ---
-
-*Project 7 of DevOps-Projects-2026. Project 3 built this pipeline in Jenkins. This project builds the same pipeline in GitHub Actions.*
