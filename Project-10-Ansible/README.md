@@ -333,35 +333,3 @@ Apache :80
 🌐 Website (http://<EC2_PUBLIC_IP>)
 ```
 
-## ✅ Final Checklist
-
-- [ ] `ansible webservers -m ping` succeeds
-- [ ] `ansible-playbook playbooks/site.yml --check --diff` reviewed
-- [ ] First run: `changed > 0`, `failed=0`
-- [ ] Website opens at `http://<EC2_PUBLIC_IP>`
-- [ ] `id devops` and `id deploy` work on the server
-- [ ] Second run: `changed=0` (idempotent, apart from the timestamp in index.html)
-- [ ] `ansible-playbook playbooks/health-check.yml` passes
-- [ ] Edit one line in `index.html.j2`, redeploy with `deploy.yml`, see the change
-- [ ] `ansible-lint` passes (or CI is green)
-- [ ] No `.pem`, real IP, or vault password committed — check `git status`
-- [ ] Screenshots: ping, first run recap, second run recap (`changed=0`), website in browser
-
-## What to Show in an Interview
-
-1. Open `playbooks/site.yml` — 5 roles, in order, with tags. Explain why that order matters (users before Apache, firewall before the site goes live).
-2. Open `roles/apache/handlers/main.yml` — "Apache restarts only when the config or application changes."
-3. Run the playbook twice live — first run changes, second run `changed=0`.
-4. Answer: *"What happens if the playbook fails halfway?"* — Ansible stops, you fix the cause, re-run; completed tasks are skipped because they are already in the desired state. See `docs/INTERVIEW-QUESTIONS.md`.
-
-## Clean Up (save money)
-
-```bash
-# Stop / terminate the EC2 instance in the AWS Console when you are done.
-# Ansible does not manage the EC2 lifecycle in this project —
-# that is Terraform's job (Project 6). Keep the two tools separate.
-```
-
----
-
-*Project 10 of DevOps-Projects-2026. Project 1 did this by hand. This project does it as code — Apache, users, firewall and application, all from one playbook.*
