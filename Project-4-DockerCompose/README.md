@@ -204,7 +204,3 @@ docker compose down -v     # also deletes mongo_data + redis_data (all data!)
 docker compose down -v   # removes containers, network, volumes and data
 docker image prune -f    # optional: remove unused images
 ```
-
----
-
-*Project 4 of DevOps-Projects-2026. Project 2 containerised one app. This project runs the whole stack — app, database, cache and proxy — from one file.*
