@@ -166,7 +166,3 @@ terraform destroy
 ```bash
 terraform destroy
 ```
-
----
-
-*Project 6 of DevOps-Projects-2026. Project 1 created this infrastructure by clicking in the console. This project creates it from code — and can recreate it, exactly, any time.*
