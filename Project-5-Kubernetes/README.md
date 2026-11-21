@@ -229,7 +229,3 @@ bash scripts/cleanup.sh
 minikube stop
 # To remove the cluster completely: minikube delete
 ```
-
----
-
-*Project 5 of DevOps-Projects-2026. Project 2 containerised one app, Project 4 ran a whole stack with Compose. This project lets Kubernetes run, scale and heal that app for you.*
